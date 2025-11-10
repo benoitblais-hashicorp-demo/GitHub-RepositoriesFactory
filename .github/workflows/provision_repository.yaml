@@ -121,10 +121,8 @@ jobs:
           else
             repository_topics=',{"type":"vars","attributes":{"key":"topics","value":"['"${TOPICS}"']","category":"terraform","hcl":"true"}}'
           fi
-          json_string='{"data": {"type": "workspaces","attributes": {"name": "'"${workspace_name}"'","auto_apply": true},"relationships": {"project": {"data": {"id": "'"${PROJECT_ID}"'","type": "project"}},"vars": {"data": [{"type": "vars","attributes": {"key": "name","value": "'"${NAME}"'","category": "terraform"}},{"type": "vars","attributes": {"key": "project_name","value": "'"${PROJECT}"'","category": "terraform"}}'"${repository_description}""${repository_topics}"']}}}}'
-          echo "${json_string}"
+          json_string='{"data": {"type": "workspaces","attributes": {"name": "'"${workspace_name}"'","auto_apply": true},"relationships": {"project": {"data": {"id": "'"${PROJECT_ID}"'","type": "project"}},"vars": {"data": [{"type": "vars","attributes": {"key": "name","value": "'"${NAME}"'","category": "terraform"}}'"${repository_description}""${repository_topics}"']}}}}'
           json_payload=$(echo "${json_string}" | jq)
-          echo "${json_payload}"
           run=$(curl -sS --request POST --url "${tfc_api_url}/no-code-modules/${NO_CODE_ID}/workspaces" \
           --header "${auth_header}" --header "${content_header}" --data "${json_payload}")
           if ! [[ "${run}" =~ "{\"data\":" ]]; then
