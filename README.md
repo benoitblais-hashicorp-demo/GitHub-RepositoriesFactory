@@ -1,6 +1,3 @@
-# HCPTerraform-RepositoriesFactory
-Code to provision and manage HCP Terraform repositories using Terraform code (IaC).
-
 <!-- BEGIN_TF_DOCS -->
 # GitHub Repositories Factory
 
