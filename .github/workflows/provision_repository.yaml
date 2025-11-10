@@ -160,3 +160,36 @@ jobs:
           else
             echo "INFO     | Workspace updated successfully."
           fi
+          echo "INFO     | Get `no-code` tag ID."
+          {
+            run=$(curl -sS --request GET --url "${tfc_api_url}/organizations/${TFC_ORGANIZATION}/tags?filter[category]=no-code" \
+            --header "${auth_header}" --header "${content_header}")
+            if ! [[ "${run}" =~ "{\"data\":" ]]; then
+              echo "ERROR    | Unable to get `no-code` tag ID."
+              echo "${run}"
+              exit 1
+            fi
+          } ||
+          {
+            echo "ERROR    | An error occurred during the API call to get `no-code` tag ID."
+            exit 1
+          }
+          tag_id=$(echo "${run}" | jq -r '.data[] | select(.attributes.name=="no-code") | .id')
+          if [ -z "${tag_id}" ] || [ "${tag_id}" == "null" ]; then
+            echo "ERROR    | Unable to find `no-code` tag ID."
+            exit 1
+          else
+            echo "INFO     | `no-code` tag ID is ${tag_id}."
+          fi 
+          echo "INFO     | Assign `no-code` tag to workspace."
+          json_string='{"data": {"type": "tag-associations","attributes": {},"relationships": {"tag": {"data": {"id": "'"${tag_id}"'","type": "tags"}}}}}'
+          json_payload=$(echo "${json_string}" | jq)
+          run=$(curl -sS --request POST --url "${tfc_api_url}/workspaces/${WORKSPACE_NAME}/tag-associations" \
+          --header "${auth_header}" --header "${content_header}" --data "${json_payload}")
+          if ! [[ "${run}" =~ "{\"data\":" ]]; then
+            echo "ERROR    | Unable to assign `no-code` tag to workspace."
+            echo "${run}"
+            exit 1
+          else
+            echo "INFO     | `no-code` tag assigned to workspace successfully."
+          fi
