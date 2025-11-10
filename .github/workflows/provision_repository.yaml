@@ -109,7 +109,7 @@ jobs:
           auth_header="Authorization: Bearer ${TFC_API_TOKEN}"
           content_header="Content-Type: application/vnd.api+json"
           # convert name to lowercase and replace spaces with hyphens
-          workspace_name=$(echo "${NAME}-no-code" | tr '[:upper:]' '[:lower:]' | tr ' ' '-')
+          workspace_name=$(echo "${NAME}-repository" | tr '[:upper:]' '[:lower:]' | tr ' ' '-')
           echo "INFO     | Create workspace ${workspace_name} in project ${TFC_PROJECT}."
           if [ -z "${DESCRIPTION}" ]; then
             repository_description=''
