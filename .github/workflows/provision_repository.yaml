@@ -149,7 +149,7 @@ jobs:
           tfc_api_url="https://app.terraform.io/api/v2"
           auth_header="Authorization: Bearer ${TFC_API_TOKEN}"
           content_header="Content-Type: application/vnd.api+json"
-          json_string='{"data": {"id": "'"WORKSPACE_ID"'","type": "workspaces","attributes": {"structured-run-output-enabled": false,"terraform-version": "latest"},"tag-bindings": {"data": [{"type": "tag-bindings","attributes": {"key": "no-code","value": "true"}}]}}}'
+          json_string='{"data": {"id": "'"${WORKSPACE_ID}"'","type": "workspaces","attributes": {"structured-run-output-enabled": false,"terraform-version": "latest"}}}'
           json_payload=$(echo "${json_string}" | jq)
           run=$(curl -sS --request PATCH --url "${tfc_api_url}/organizations/${TFC_ORGANIZATION}/workspaces/${WORKSPACE_NAME}" \
           --header "${auth_header}" --header "${content_header}" --data "${json_payload}")
@@ -159,4 +159,16 @@ jobs:
             exit 1
           else
             echo "INFO     | Workspace updated successfully."
+          fi
+          echo "INFO     | Add tag binding to workspace."
+          json_string='{"data": [{"type": "tag-bindings","attributes": {"key": "no-code","value": "true"}}]}'
+          json_payload=$(echo "${json_string}" | jq)
+          run=$(curl -sS --request PATCH --url "${tfc_api_url}/workspaces/${WORKSPACE_ID}/tag-bindings" \
+          --header "${auth_header}" --header "${content_header}" --data "${json_payload}")
+          if ! [[ "${run}" =~ "{\"data\":" ]]; then
+            echo "ERROR    | Unable to add tag binding to workspace."
+            echo "${run}"
+            exit 1
+          else
+            echo "INFO     | Tag binding added to workspace successfully."
           fi
