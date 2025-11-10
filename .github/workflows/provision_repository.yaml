@@ -164,6 +164,7 @@ jobs:
           {
             run=$(curl -sS --request GET --url "${tfc_api_url}/organizations/${TFC_ORGANIZATION}/tags" \
             --header "${auth_header}" --header "${content_header}")
+            echo "${run}"
             if ! [[ "${run}" =~ "{\"data\":" ]]; then
               echo "ERROR    | Unable to get \"no-code\" tag ID."
               echo "${run}"
