@@ -160,12 +160,12 @@ jobs:
           else
             echo "INFO     | Workspace updated successfully."
           fi
-          echo "INFO     | Get `no-code` tag ID."
+          echo "INFO     | Get \"no-code\" tag ID."
           {
             run=$(curl -sS --request GET --url "${tfc_api_url}/organizations/${TFC_ORGANIZATION}/tags" \
             --header "${auth_header}" --header "${content_header}")
             if ! [[ "${run}" =~ "{\"data\":" ]]; then
-              echo "ERROR    | Unable to get `no-code` tag ID."
+              echo "ERROR    | Unable to get \"no-code\" tag ID."
               echo "${run}"
               exit 1
             fi
