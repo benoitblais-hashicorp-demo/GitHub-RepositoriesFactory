@@ -95,7 +95,7 @@ jobs:
             echo "id=${project_id}" >> "$GITHUB_OUTPUT"
           fi
 
-      - name: Provision Workspace
+      - name: Provision Repository
         id: provision
         env:
           NAME: ${{ github.event.inputs.name }}
@@ -119,7 +119,7 @@ jobs:
           if [ -z "${TOPICS}" ]; then
             repository_topics=''
           else
-            repository_topics=',{"type":"vars","attributes":{"key":"topics","value":["'"${TOPICS}"'"],"category":"terraform","hcl":"true"}}'
+            repository_topics=',{"type":"vars","attributes":{"key":"topics","value":"['"${TOPICS}"']","category":"terraform","hcl":"true"}}'
           fi
           json_string='{"data": {"type": "workspaces","attributes": {"name": "'"${workspace_name}"'","auto_apply": true},"relationships": {"project": {"data": {"id": "'"${PROJECT_ID}"'","type": "project"}},"vars": {"data": [{"type": "vars","attributes": {"key": "name","value": "'"${NAME}"'","category": "terraform"}},{"type": "vars","attributes": {"key": "project_name","value": "'"${PROJECT}"'","category": "terraform"}}'"${repository_description}""${repository_topics}"']}}}}'
           echo "${json_string}"
@@ -141,7 +141,7 @@ jobs:
             echo "workspace_name=${workspace_name}" >> "$GITHUB_OUTPUT"
           fi
 
-      - name: Provision Project
+      - name: Configure Workspace Settings
         env:
           NAME: ${{ github.event.inputs.name }}
           WORKSPACE_ID: ${{ steps.provision.outputs.workspace_id }}
