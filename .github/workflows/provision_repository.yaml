@@ -112,12 +112,12 @@ jobs:
           workspace_name=$(echo "${NAME}-repository" | tr '[:upper:]' '[:lower:]' | tr ' ' '-')
           echo "INFO     | Create workspace ${workspace_name} in project ${TFC_PROJECT}."
           if [ -z "${DESCRIPTION}" ]; then
-            repository_description=''
+            repository_description=',{"type":"vars","attributes":{"key":"description","value":"null","category":"terraform"}}'
           else
             repository_description=',{"type":"vars","attributes":{"key":"description","value":"'"${DESCRIPTION}"'","category":"terraform"}}'
           fi
           if [ -z "${TOPICS}" ]; then
-            repository_topics=''
+            repository_topics=',{"type":"vars","attributes":{"key":"topics","value":"null","category":"terraform","hcl":"true"}}'
           else
             repository_topics=',{"type":"vars","attributes":{"key":"topics","value":"['"${TOPICS}"']","category":"terraform","hcl":"true"}}'
           fi
