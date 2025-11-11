@@ -117,9 +117,9 @@ jobs:
             repository_description=',{"type":"vars","attributes":{"key":"description","value":"'"${DESCRIPTION}"'","category":"terraform"}}'
           fi
           if [ -z "${TOPICS}" ]; then
-            repository_topics=',{"type":"vars","attributes":{"key":"topics","value":"null","category":"terraform","hcl":"true"}}'
+            repository_topics=',{"type":"vars","attributes":{"key":"topics","value":"null","category":"terraform"}}'
           else
-            repository_topics=',{"type":"vars","attributes":{"key":"topics","value":"['"${TOPICS}"']","category":"terraform","hcl":"true"}}'
+            repository_topics=',{"type":"vars","attributes":{"key":"topics","value":"['"${TOPICS}"']","category":"terraform"}}'
           fi
           json_string='{"data": {"type": "workspaces","attributes": {"name": "'"${workspace_name}"'","auto_apply": true},"relationships": {"project": {"data": {"id": "'"${PROJECT_ID}"'","type": "project"}},"vars": {"data": [{"type": "vars","attributes": {"key": "name","value": "'"${NAME}"'","category": "terraform"}}'"${repository_description}""${repository_topics}"']}}}}'
           json_payload=$(echo "${json_string}" | jq)
