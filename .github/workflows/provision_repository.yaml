@@ -9,14 +9,12 @@ on:  # yamllint disable-line rule:truthy
         type: string
       description:
         description: 'Description of the Repository to create.'
-        required: false
+        required: true
         type: string
-        default: ''
       topics:
         description: 'The list of topics of the repository.'
-        required: false
+        required: true
         type: string
-        default: ''
 
 permissions:
   contents: write
@@ -111,16 +109,8 @@ jobs:
           # convert name to lowercase and replace spaces with hyphens
           workspace_name=$(echo "${NAME}-repository" | tr '[:upper:]' '[:lower:]' | tr ' ' '-')
           echo "INFO     | Create workspace ${workspace_name} in project ${TFC_PROJECT}."
-          if [ -z "${DESCRIPTION}" ]; then
-            repository_description=',{"type":"vars","attributes":{"key":"description","value":"null","category":"terraform"}}'
-          else
-            repository_description=',{"type":"vars","attributes":{"key":"description","value":"'"${DESCRIPTION}"'","category":"terraform"}}'
-          fi
-          if [ -z "${TOPICS}" ]; then
-            repository_topics=',{"type":"vars","attributes":{"key":"topics","value":"null","category":"terraform"}}'
-          else
-            repository_topics=',{"type":"vars","attributes":{"key":"topics","value":"['"${TOPICS}"']","category":"terraform"}}'
-          fi
+          repository_description=',{"type":"vars","attributes":{"key":"description","value":"'"${DESCRIPTION}"'","category":"terraform"}}'
+          repository_topics=',{"type":"vars","attributes":{"key":"topics","value":"['"${TOPICS}"']","category":"terraform"}}'
           json_string='{"data": {"type": "workspaces","attributes": {"name": "'"${workspace_name}"'","auto_apply": true},"relationships": {"project": {"data": {"id": "'"${PROJECT_ID}"'","type": "project"}},"vars": {"data": [{"type": "vars","attributes": {"key": "name","value": "'"${NAME}"'","category": "terraform"}}'"${repository_description}""${repository_topics}"']}}}}'
           json_payload=$(echo "${json_string}" | jq)
           run=$(curl -sS --request POST --url "${tfc_api_url}/no-code-modules/${NO_CODE_ID}/workspaces" \
